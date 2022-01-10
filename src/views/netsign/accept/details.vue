@@ -197,19 +197,18 @@
         <el-table-column
           label="贷款方式"
           prop="dkfsbm"
-          :formatter="dkfsbmFormat"
         >
-<!--          <template scope="scope">-->
-<!--            <el-select v-model="scope.row.dkfsbm" size="small">-->
-<!--              <el-option-->
-<!--                v-for="item in dkfsbmOptions"-->
-<!--                :key="item.dictKey"-->
-<!--                :label="item.dictValue"-->
-<!--                :value="item.dictValue"-->
-<!--              >-->
-<!--              </el-option>-->
-<!--            </el-select>-->
-<!--          </template>-->
+          <template scope="scope">
+            <el-select v-model="scope.row.dkfsbm" size="small">
+              <el-option
+                v-for="item in dict.dkfsbm"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="item.dictValue"
+              >
+              </el-option>
+            </el-select>
+          </template>
         </el-table-column>
         <el-table-column
           label="合同生效日期"
@@ -392,6 +391,20 @@
         </el-table-column>
       </el-table>
     </basic-container>
+    <basic-container v-if="false">
+      <el-form>
+        <el-form-item>
+          <el-select v-model="this.accept.dkfsbm">
+            <el-option
+              v-for="dict in dict.dkfsbm"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </basic-container>
   </div>
 </template>
 
@@ -442,11 +455,12 @@ export default {
     selectDict() {
       getDicts('DKFSBM').then(response => {
         this.dict.dkfsbm = response.data
+        console.log(this.dict.dkfsbm)
       })
     },
     // 字典翻译
-    dkfsbmFormat(row,column){
-      return this.selectDictLabel(this.dict.dkfsbm,row.dkfsbm)
+    dkfsbmFormat(row, column) {
+      return this.selectDictLabel(this.dict.dkfsbm, row.dkfsbm)
     },
     back() {
       if (!this.state) {
