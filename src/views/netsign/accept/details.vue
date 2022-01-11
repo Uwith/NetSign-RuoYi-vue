@@ -401,6 +401,7 @@
         :data="this.imgList"
         border
         highlight-current-row
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="图片" prop="wjnr">
@@ -416,7 +417,7 @@
 
 <script>
 import basicContainer from '@/views/components/basic-container/main'
-import { listAccept, updateAccept, selectImgShow } from '../../../api/netsign/accept'
+import { listAccept, updateAccept, selectImgShow, selectImg } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
 
 export default {
@@ -545,7 +546,17 @@ export default {
         this.imgShow = true
       })
     },
+
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.wjId)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 删除按钮操作 */
     selectImg() {
+      const wjIds = this.ids
+      selectImg(wjIds)
       this.imgShow = false
     }
   }

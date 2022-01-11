@@ -26,3 +26,12 @@ export function selectImgShow(data) {
     data: data
   })
 }
+
+// 查询登记业务列表
+export function selectImg(data) {
+  return request({
+    url: '/netsign/accept/selectImg',
+    method: 'post',
+    data: data
+  })
+}
