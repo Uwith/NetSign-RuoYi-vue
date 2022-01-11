@@ -1,16 +1,6 @@
 <template>
   <div class="details">
-    <el-button @click="sub" style="margin-left: 12%;background-color: #ffa94c;color: white;" round
-    >打印
-    </el-button>
-    <el-button @click="selectImgShow()" style="background-color: #ffa94c;color: white;" round
-    >选择图片
-    </el-button>
-    <el-button
-      @click="handleUpdate()" style="margin-left: 53%;background-color: #ffa94c;color: white;" round
-    >保存
-    </el-button>
-    <el-button @click="back" style="background-color: #ffa94c;color: white;" round
+    <el-button @click="back()" style="margin-left: 80%;background-color: #ffa94c;color: white;" round
     >返回
     </el-button>
 
@@ -58,48 +48,23 @@
         <el-table-column
           label="小区"
           prop="xq"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.xq" placeholder="小区"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="楼号"
           prop="lh"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.lh" placeholder="楼号"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="所在起始层"
           prop="szqsc"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.szqsc" placeholder="所在起始层"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="所在终止层"
           prop="szzzc"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.szzzc" placeholder="所在终止层"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="层房序号"
           prop="dy"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.dy" placeholder="单元"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
 
       </el-table>
     </basic-container>
@@ -119,96 +84,46 @@
         <el-table-column
           label="资金监管编号"
           prop="jgbh"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jgbh" placeholder="JG123"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="评估价格"
           prop="pgjg"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.pgjg" placeholder="1234"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="成交金额"
           prop="cjje"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.cjje" placeholder="840000"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="首付款金额"
           prop="sfkje"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.sfkje" placeholder="84000"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="贷款金额"
           prop="dkje"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.dkje" placeholder="0"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="资金监管比例"
           prop="jgbl"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jgbl" placeholder="10"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="以监管资金金额"
           prop="jgje"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jgje" placeholder="10000.00"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
 
         <el-table-column
           label="付款类型"
           prop="fklxbm"
         >
-          <template scope="scope">
-            <el-select v-model="scope.row.fklxbm" size="small">
-              <el-option
-                v-for="dict in dict.type.FKLXBM"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.FKLXBM" :value="scope.row.fklxbm"/>
           </template>
         </el-table-column>
         <el-table-column
           label="贷款方式"
           prop="dkfsbm"
         >
-          <template scope="scope">
-            <el-select v-model="scope.row.dkfsbm" size="small">
-              <el-option
-                v-for="item in dict.dkfsbm"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="item.dictValue"
-              >
-              </el-option>
-            </el-select>
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.DKFSBM" :value="scope.row.dkfsbm"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -256,58 +171,31 @@
         </el-table-column>
         <el-table-column label="交易者证件号码" prop="jyzzjhm"></el-table-column>
         <el-table-column label="交易者性质" prop="jyzxzbm">
-          <template scope="scope">
-            <el-select v-model="scope.row.jyzxzbm" size="small">
-              <el-option
-                v-for="dict in dict.type.JYZXZBM"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYZXZBM" :value="scope.row.jyzxzbm"/>
           </template>
         </el-table-column>
         <el-table-column
           label="交易者户籍行政区划"
           prop="jyzhjxzqh"
         >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jyzhjxzqh" placeholder="户籍行政区划"
-            ></el-input>
-          </template>
         </el-table-column>
         <el-table-column
           label="共有方式"
           prop="gyfsbm"
         >
-          <template scope="scope">
-            <el-select v-model="scope.row.gyfsbm" size="small">
-              <el-option
-                v-for="dict in dict.type.GYFSBM"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.GYFSBM" :value="scope.row.gyfsbm"/>
           </template>
         </el-table-column>
         <el-table-column
           label="所占份额"
           prop="szfe"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.szfe" placeholder="请输入内容"></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="交易者户籍"
           prop="jyzhj"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jyzhj" placeholder="交易者户籍"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
       </el-table>
     </basic-container>
     <basic-container class="basic-container-style">
@@ -338,80 +226,33 @@
         </el-table-column>
         <el-table-column label="交易者证件号码" prop="jyzzjhm"></el-table-column>
         <el-table-column label="交易者性质" prop="jyzxzbm">
-          <template scope="scope">
-            <el-select v-model="scope.row.jyzxzbm" size="small">
-              <el-option
-                v-for="dict in dict.type.JYZXZBM"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYZXZBM" :value="scope.row.jyzxzbm"/>
           </template>
         </el-table-column>
         <el-table-column
           label="交易者户籍行政区划"
           prop="jyzhjxzqh"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jyzhjxzqh" placeholder="户籍行政区划"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="共有方式"
           prop="gyfsbm"
         >
-          <template scope="scope">
-            <el-select v-model="scope.row.gyfsbm" size="small">
-              <el-option
-                v-for="dict in dict.type.GYFSBM"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.GYFSBM" :value="scope.row.gyfsbm"/>
           </template>
-
         </el-table-column>
         <el-table-column
           label="所占份额"
           prop="szfe"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.szfe" placeholder="请输入内容"></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           label="交易者户籍"
           prop="jyzhj"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.jyzhj" placeholder="交易者户籍"
-            ></el-input>
-          </template>
-        </el-table-column>
+        ></el-table-column>
       </el-table>
     </basic-container>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
 
-    </el-dialog>
-    <el-dialog title="图片选择" :visible.sync="imgShow">
-      <el-table
-        :data="this.imgList"
-        border
-        highlight-current-row
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="图片" prop="wjnr">
-          <template scope="scope">
-            {{ scope.row.fjdz }}
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-button @click="selectImg">确定</el-button>
-    </el-dialog>
   </div>
 </template>
 
@@ -421,7 +262,7 @@ import { listAccept, updateAccept, selectImgShow, selectImg } from '../../../api
 import { getDicts } from '../../../api/system/dict/data'
 
 export default {
-  dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM'],
+  dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM', 'DKFSBM'],
   name: 'recordDetails',
   components: {
     basicContainer
@@ -490,26 +331,11 @@ export default {
     },
 
     back() {
-      if (!this.state) {
-        this.$confirm('文件还未保存,是否退出?', '提示', {
-          confirmButtonText: '不保存',
-          cancelButtonText: '取消,去保存',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '退出成功!'
-          })
-          this.$emit('childFn', this.isOpen)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消退出！'
-          })
-        })
-      } else {
-        this.$emit('childFn', this.isOpen)
-      }
+      this.$message({
+        type: 'success',
+        message: '退出成功!'
+      })
+      this.$emit('childFn', this.isOpen)
     },
     // 和并列
     objectSpanMethod({ rowIndex, columnIndex }) {
@@ -526,38 +352,6 @@ export default {
           }
         }
       }
-    },
-    /** 保存按钮操作 */
-    handleUpdate() {
-      updateAccept(this.accept[0]).then(response => {
-        // this.$modal.msgSuccess('修改成功')
-        // this.getList()
-      })
-    },
-    sub() {
-      console.log(this.dict)
-      console.log(this.accept[0])
-      console.log(this.data)
-      console.log(this.imgList)
-    },
-    selectImgShow() {
-      selectImgShow(this.accept[0].bdcxxId).then(response => {
-        this.imgList = response.data
-        this.imgShow = true
-      })
-    },
-
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.wjId)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
-    /** 删除按钮操作 */
-    selectImg() {
-      const wjIds = this.ids
-      selectImg(wjIds)
-      this.imgShow = false
     }
   }
 }

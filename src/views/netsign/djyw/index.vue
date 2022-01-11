@@ -107,7 +107,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -234,7 +234,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      console.log(this.ids)
       this.ids = selection.map(item => item.djywId)
+      console.log(this.ids)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },

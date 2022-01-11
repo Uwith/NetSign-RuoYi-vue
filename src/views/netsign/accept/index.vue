@@ -21,11 +21,12 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
+          icon="el-icon-delete"
           size="mini"
-          @click="handleAdd"
-          v-hasPermi="['netsign:djyw:add']"
+          :disabled="multiple"
+          @click="handleAudit"
         >批量提交审核
+          <!--          v-hasPermi="['netsign:djyw:remove']"-->
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -41,7 +42,7 @@
       <el-table-column label="业务编号" align="center" prop="ywbh"/>
       <el-table-column label="房屋编码" align="center" prop="fwbm"/>
       <el-table-column label="行政区划代码" align="center" prop="xzqhdm"/>
-<!--      <el-table-column label="区县" align="center" prop="qx"/>-->
+      <!--      <el-table-column label="区县" align="center" prop="qx"/>-->
       <el-table-column label="房号" align="center" prop="fh"/>
       <el-table-column label="层房序号" align="center" prop="dy"/>
       <el-table-column label="备案状态" align="center" prop="basicWqba.bastatus">
@@ -64,7 +65,7 @@
             type="text"
             icon="el-icon-delete"
             v-if="scope.row.ywzt===1"
-            @click="handleDelete(scope.row)"
+            @click="handleAudit(scope.row)"
             v-hasPermi="['netsign:djyw:remove']"
           >提交审核
           </el-button>
@@ -102,6 +103,7 @@
 <script>
 import { listAccept } from '@/api/netsign/accept'
 import AcceptDetails from '@/views/netsign/accept/details'
+import { submitAudit } from '../../../api/netsign/accept'
 
 export default {
   name: 'Accept',
@@ -177,19 +179,20 @@ export default {
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.djywId)
+      this.ids = selection.map(item => item.bdcxxId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
 
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const djywIds = row.djywId || this.ids
-      this.$modal.confirm('是否确认删除登记业务编号为"' + djywIds + '"的数据项？').then(function() {
-        return delDjyw(djywIds)
+    /** 审核按钮操作 */
+    handleAudit(row) {
+      const bdcxxIds = row.bdcxxId || this.ids
+      console.log(bdcxxIds)
+      this.$modal.confirm('是否确认提交').then(function() {
+        return submitAudit(bdcxxIds)
       }).then(() => {
         this.getList()
-        this.$modal.msgSuccess('删除成功')
+        this.$modal.msgSuccess('提交成功')
       }).catch(() => {
       })
     },
@@ -203,7 +206,7 @@ export default {
     closeDetails(isOpen) {
       this.innerVisible = isOpen
       this.getList()
-    },
+    }
   }
 }
 </script>

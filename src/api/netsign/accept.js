@@ -35,3 +35,19 @@ export function selectImg(data) {
     data: data
   })
 }
+
+// 提交审核
+export function submitAudit(bdcxxId) {
+  return request({
+    url: '/netsign/accept/submit'+ bdcxxId,
+    method: 'delete'
+  })
+}
+
+// 驳回审核
+export function rejectAudit(bdcxxId) {
+  return request({
+    url: '/netsign/accept/reject'+ bdcxxId,
+    method: 'delete'
+  })
+}

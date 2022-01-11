@@ -202,10 +202,10 @@
           <template scope="scope">
             <el-select v-model="scope.row.dkfsbm" size="small">
               <el-option
-                v-for="item in dict.dkfsbm"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="item.dictValue"
+                v-for="dict in dict.type.DKFSBM"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
               >
               </el-option>
             </el-select>
@@ -421,7 +421,7 @@ import { listAccept, updateAccept, selectImgShow, selectImg } from '../../../api
 import { getDicts } from '../../../api/system/dict/data'
 
 export default {
-  dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM'],
+  dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM', 'DKFSBM'],
   name: 'AcceptDetails',
   components: {
     basicContainer
@@ -444,7 +444,8 @@ export default {
       data: [],
       // 图片列表显示
       imgShow: false,
-      imgList: []
+      imgList: [],
+      state: false
 
     }
   },
@@ -529,9 +530,10 @@ export default {
     },
     /** 保存按钮操作 */
     handleUpdate() {
+      this.state = true
       updateAccept(this.accept[0]).then(response => {
-        // this.$modal.msgSuccess('修改成功')
-        // this.getList()
+        this.$modal.msgSuccess('修改成功')
+        this.getList()
       })
     },
     sub() {

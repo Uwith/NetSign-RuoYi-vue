@@ -183,16 +183,16 @@ export default {
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.djywId)
+      this.ids = selection.map(item => item.bdcxxId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
-      const djywIds = row.djywId || this.ids
+      const bdcxxIds = row.bdcxxId || this.ids
       this.$modal.confirm('是否确认删除登记业务编号为"' + djywIds + '"的数据项？').then(function() {
-        return delDjyw(djywIds)
+        return delDjyw(bdcxxIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功')

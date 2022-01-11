@@ -21,11 +21,24 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
+          icon="el-icon-delete"
           size="mini"
+          :disabled="multiple"
           @click="handleAdd"
           v-hasPermi="['netsign:djyw:add']"
         >批量通过审核
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="rejectAudit"
+          v-hasPermi="['netsign:djyw:add']"
+        >批量驳回审核
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -84,6 +97,7 @@
 <script>
 import { listAccept } from '@/api/netsign/accept'
 import AuditDetails from '@/views/netsign/audit/details'
+import { rejectAudit } from '../../../api/netsign/accept'
 
 export default {
   name: 'Accept',
@@ -159,22 +173,22 @@ export default {
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.djywId)
+      this.ids = selection.map(item => item.bdcxxId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
 
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const djywIds = row.djywId || this.ids
-      this.$modal.confirm('是否确认删除登记业务编号为"' + djywIds + '"的数据项？').then(function() {
-        return delDjyw(djywIds)
+    rejectAudit(row) {
+      const bdcxxIds = row.bdcxxId || this.ids
+      this.$modal.confirm('是否确认驳回').then(function() {
+        return rejectAudit(bdcxxIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })
     },
+
 
     /** 打开详情页面 */
     details(row) {
