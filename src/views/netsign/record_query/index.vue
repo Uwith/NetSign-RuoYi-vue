@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="备案码" prop="recordcode">
+        <el-input
+          v-model="queryParams.recordcode"
+          placeholder="请输入备案码"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="业务编号" prop="ywbh">
         <el-input
           v-model="queryParams.ywbh"
@@ -33,9 +42,9 @@
 
     <el-table v-loading="loading" :data="acceptList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="备案码" align="center" prop="basicWqba.recordcode">
+      <el-table-column label="备案码" align="center" prop="basicWqba.recordid">
         <template slot-scope="scope">
-          {{scope.row.basicWqba.recordcode}}
+          {{scope.row.basicWqba.recordid}}
         </template>
       </el-table-column>
       <el-table-column label="业务编号" align="center" prop="ywbh"/>
@@ -55,7 +64,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-if="scope.row.ywzt===1"
+
             @click="details(scope.row)"
           >详情
           </el-button>
@@ -63,14 +72,30 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
-            v-if="scope.row.ywzt===1"
-            @click="handleDelete(scope.row)"
+            @click="rowUndo(scope.row)"
+            v-if="scope.row.ywzt===3"
             v-hasPermi="['netsign:djyw:remove']"
-          >提交审核
+          >申请撤销
           </el-button>
-          <Span
-            v-if="scope.row.ywzt===0"
-          >推送尚未完结</Span>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="rowUndo(scope.row)"
+            v-if="scope.row.ywzt===5"
+            v-hasPermi="['netsign:djyw:remove']"
+          >重新申请
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="rowUndoNum(scope.row)"
+            v-if="scope.row.ywzt===6"
+            v-hasPermi="['netsign:djyw:remove']"
+          >撤销编号
+          </el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -136,6 +161,7 @@ export default {
         bdcxxId: null,
         ywzt: null,
         ywbh: null,
+        recordcode:null,
         status: null
       },
       // 表单参数

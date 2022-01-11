@@ -1,10 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="业务编号" prop="ywbh">
+      <el-form-item label="备案码" prop="recordcode">
         <el-input
-          v-model="queryParams.ywbh"
-          placeholder="请输入业务编号"
+          v-model="queryParams.recordcode"
+          placeholder="请输入备案码"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="撤销编号" prop="applynum">
+        <el-input
+          v-model="queryParams.applynum"
+          placeholder="请输入撤销编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -33,9 +42,9 @@
 
     <el-table v-loading="loading" :data="acceptList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="备案码" align="center" prop="basicWqba.recordcode">
+      <el-table-column label="备案码" align="center" prop="basicWqba.recordid">
         <template slot-scope="scope">
-          {{ scope.row.basicWqba.recordcode }}
+          {{ scope.row.basicWqba.recordid }}
         </template>
       </el-table-column>
       <el-table-column label="业务编号" align="center" prop="ywbh"/>
@@ -45,9 +54,8 @@
       <el-table-column label="房号" align="center" prop="fh"/>
       <el-table-column label="层房序号" align="center" prop="dy"/>
       <el-table-column label="撤销编号" align="center" prop="basicWqba.applyNum">
-<!--        TODO -->
         <template slot-scope="scope">
-          {{ scope.row.basicWqba.recordcode }}
+          {{ scope.row.basicWqba.recordid }}
         </template>
       </el-table-column>
       <el-table-column label="撤销状态" align="center" prop="basicWqba.bastatus">
@@ -142,6 +150,8 @@ export default {
         bdcxxId: null,
         ywzt: null,
         ywbh: null,
+        applynum: null,
+        recordcode: null,
         status: null
       },
       // 表单参数

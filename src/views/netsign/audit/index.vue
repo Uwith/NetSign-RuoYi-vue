@@ -24,7 +24,7 @@
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
-          @click="handleAdd"
+          @click="passAudit"
           v-hasPermi="['netsign:djyw:add']"
         >批量通过审核
         </el-button>
@@ -97,7 +97,7 @@
 <script>
 import { listAccept } from '@/api/netsign/accept'
 import AuditDetails from '@/views/netsign/audit/details'
-import { rejectAudit } from '../../../api/netsign/accept'
+import { passAudit, rejectAudit } from '../../../api/netsign/accept'
 
 export default {
   name: 'Accept',
@@ -177,14 +177,25 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-
+// 驳回审核
     rejectAudit(row) {
       const bdcxxIds = row.bdcxxId || this.ids
       this.$modal.confirm('是否确认驳回').then(function() {
         return rejectAudit(bdcxxIds)
       }).then(() => {
         this.getList()
-        this.$modal.msgSuccess('删除成功')
+        this.$modal.msgSuccess('驳回审核成功')
+      }).catch(() => {
+      })
+    },
+// 通过审核
+    passAudit(row) {
+      const bdcxxIds = row.bdcxxId || this.ids
+      this.$modal.confirm('是否确认通过审核').then(function() {
+        return passAudit(bdcxxIds)
+      }).then(() => {
+        this.getList()
+        this.$modal.msgSuccess('通过审核成功')
       }).catch(() => {
       })
     },

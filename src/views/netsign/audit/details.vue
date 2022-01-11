@@ -264,7 +264,7 @@
 
 <script>
 import basicContainer from '@/views/components/basic-container/main'
-import { listAccept, rejectAudit } from '../../../api/netsign/accept'
+import { listAccept, passAudit, rejectAudit } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
 
 export default {
@@ -361,8 +361,13 @@ export default {
     reject() {
       rejectAudit(this.accept[0].bdcxxId).then(response => {
         this.$modal.msgSuccess('驳回成功')
+        this.back()
       })
-      this.back()
+    },
+    passAudit() {
+      passAudit(this.accept[0].bdcxxId).then(response => {
+        this.$modal.msg(response.msg)
+      })
     }
   }
 }

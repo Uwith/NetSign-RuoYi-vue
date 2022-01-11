@@ -39,15 +39,23 @@ export function selectImg(data) {
 // 提交审核
 export function submitAudit(bdcxxId) {
   return request({
-    url: '/netsign/accept/submit'+ bdcxxId,
-    method: 'delete'
+    url: '/netsign/accept/submit/'+ bdcxxId,
+    method: 'get'
   })
 }
 
 // 驳回审核
 export function rejectAudit(bdcxxId) {
   return request({
-    url: '/netsign/accept/reject'+ bdcxxId,
-    method: 'delete'
+    url: '/netsign/accept/reject/'+ bdcxxId,
+    method: 'get'
+  })
+}
+
+// 通过审核
+export function passAudit(bdcxxId) {
+  return request({
+    url: '/netsign/accept/passAudit/'+ bdcxxId,
+    method: 'get'
   })
 }
