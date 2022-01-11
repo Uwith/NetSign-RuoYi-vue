@@ -25,7 +25,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['netsign:djyw:add']"
-        >批量提交审核
+        >批量通过审核
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -33,15 +33,10 @@
 
     <el-table v-loading="loading" :data="acceptList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="业务状态" align="center" prop="ywzt">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.netsign_ywzt" :value="scope.row.ywzt"/>
-        </template>
-      </el-table-column>
       <el-table-column label="业务编号" align="center" prop="ywbh"/>
       <el-table-column label="房屋编码" align="center" prop="fwbm"/>
       <el-table-column label="行政区划代码" align="center" prop="xzqhdm"/>
-<!--      <el-table-column label="区县" align="center" prop="qx"/>-->
+      <!--      <el-table-column label="区县" align="center" prop="qx"/>-->
       <el-table-column label="房号" align="center" prop="fh"/>
       <el-table-column label="层房序号" align="center" prop="dy"/>
       <el-table-column label="备案状态" align="center" prop="basicWqba.bastatus">
@@ -55,22 +50,9 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-if="scope.row.ywzt===1"
             @click="details(scope.row)"
-          >详情
+          >审核
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            v-if="scope.row.ywzt===1"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['netsign:djyw:remove']"
-          >提交审核
-          </el-button>
-          <Span
-            v-if="scope.row.ywzt===0"
-          >推送尚未完结</Span>
         </template>
       </el-table-column>
     </el-table>
@@ -90,10 +72,10 @@
       :show-close="false"
       v-if="innerVisible"
     >
-      <AcceptDetails
+      <AuditDetails
         @childFn="closeDetails"
         :ywbh="rowYwbh"
-      ></AcceptDetails>
+      ></AuditDetails>
     </el-drawer>
 
   </div>
@@ -101,12 +83,12 @@
 
 <script>
 import { listAccept } from '@/api/netsign/accept'
-import AcceptDetails from '@/views/netsign/accept/details'
+import AuditDetails from '@/views/netsign/audit/details'
 
 export default {
   name: 'Accept',
   components: {
-    AcceptDetails
+    AuditDetails
   },
   dicts: ['netsign_ywzt', 'netsign_bastate'],
   data() {
@@ -203,7 +185,7 @@ export default {
     closeDetails(isOpen) {
       this.innerVisible = isOpen
       this.getList()
-    },
+    }
   }
 }
 </script>

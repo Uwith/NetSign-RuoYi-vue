@@ -33,15 +33,15 @@
 
     <el-table v-loading="loading" :data="acceptList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="业务状态" align="center" prop="ywzt">
+      <el-table-column label="备案码" align="center" prop="basicWqba.recordcode">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.netsign_ywzt" :value="scope.row.ywzt"/>
+          {{scope.row.basicWqba.recordcode}}
         </template>
       </el-table-column>
       <el-table-column label="业务编号" align="center" prop="ywbh"/>
       <el-table-column label="房屋编码" align="center" prop="fwbm"/>
       <el-table-column label="行政区划代码" align="center" prop="xzqhdm"/>
-<!--      <el-table-column label="区县" align="center" prop="qx"/>-->
+      <!--      <el-table-column label="区县" align="center" prop="qx"/>-->
       <el-table-column label="房号" align="center" prop="fh"/>
       <el-table-column label="层房序号" align="center" prop="dy"/>
       <el-table-column label="备案状态" align="center" prop="basicWqba.bastatus">
@@ -90,10 +90,10 @@
       :show-close="false"
       v-if="innerVisible"
     >
-      <AcceptDetails
+      <recordDetails
         @childFn="closeDetails"
         :ywbh="rowYwbh"
-      ></AcceptDetails>
+      ></recordDetails>
     </el-drawer>
 
   </div>
@@ -101,12 +101,12 @@
 
 <script>
 import { listAccept } from '@/api/netsign/accept'
-import AcceptDetails from '@/views/netsign/accept/details'
+import recordDetails from '@/views/netsign/record_query/details'
 
 export default {
   name: 'Accept',
   components: {
-    AcceptDetails
+    recordDetails
   },
   dicts: ['netsign_ywzt', 'netsign_bastate'],
   data() {
@@ -203,7 +203,7 @@ export default {
     closeDetails(isOpen) {
       this.innerVisible = isOpen
       this.getList()
-    },
+    }
   }
 }
 </script>
