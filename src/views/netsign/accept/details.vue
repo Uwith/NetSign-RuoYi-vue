@@ -1,13 +1,24 @@
 <template>
   <div class="details">
-    <el-button @click="sub" style="margin-left: 12%;background-color: #ffa94c;color: white;" round>打印</el-button>
-    <el-button @click="save" style="margin-left: 53%;background-color: #ffa94c;color: white;" round>保存</el-button>
-    <el-button @click="back" style="background-color: #ffa94c;color: white;" round>返回</el-button>
+    <el-button @click="sub" style="margin-left: 12%;background-color: #ffa94c;color: white;" round
+    >打印
+    </el-button>
+    <el-button @click="selectImgShow()" style="background-color: #ffa94c;color: white;" round
+    >选择图片
+    </el-button>
+    <el-button
+      @click="handleUpdate(this.accept)" style="margin-left: 53%;background-color: #ffa94c;color: white;" round
+    >保存
+    </el-button>
+    <el-button @click="back" style="background-color: #ffa94c;color: white;" round
+    >返回
+    </el-button>
+
     <basic-container style="width:75%; margin-left: 11%">
       <label>不动产信息:</label>
       <el-table
         :show-header="false"
-        :data="this.accept"
+        :data="tableData"
         :span-method="objectSpanMethod"
         border
         :cell-style="columnStyle"
@@ -17,29 +28,10 @@
           <template slot-scope="scope">
             <div id="uploadImg" style="">
               <div class="bgimg">
-                <el-image :fit="none" style="height:300px" :src="srcList[0]" @click="show" :error="空"></el-image>
-                <el-button @click="getFileData" class="upImgButton2" round>
-                  上传图片
-                </el-button>
+                <span>aaa</span>
+                <!--                <el-image :fit="none" style="height:300px" :src="srcList[0]" @click="show" :error="空"></el-image>-->
               </div>
             </div>
-            <el-dialog title="图片上传" :visible.sync="dialogVisible" :modal="false">
-              <div class="upload-file">
-                <!-- html组件代码 -->
-                <el-upload
-                  :multiple="multiple"
-                  action="${pageContext.request.contextPath}/lookup/editEvidence/123"
-                  list-type="picture-card"
-                  :auto-upload="false"
-                  :http-request="uploadFile"
-                  :headers="myHeaders"
-                  ref="upload"
-                >
-                  <i class="el-icon-plus"></i>
-                </el-upload>
-                <el-button @click="subPicForm()">提交上传</el-button>
-              </div>
-            </el-dialog>
 
           </template>
         </el-table-column>
@@ -99,6 +91,16 @@
             ></el-input>
           </template>
         </el-table-column>
+        <el-table-column
+          label="层房序号"
+          prop="dy"
+        >
+          <template scope="scope">
+            <el-input size="small" v-model="scope.row.dy" placeholder="单元"
+            ></el-input>
+          </template>
+        </el-table-column>
+
       </el-table>
     </basic-container>
     <basic-container class="basic-container-style">
@@ -185,12 +187,11 @@
           <template scope="scope">
             <el-select v-model="scope.row.fklxbm" size="small">
               <el-option
-                v-for="item in fklxbmOptions"
-                :key="item.dictKey"
-                :label="item.dictValue"
-                :value="item.dictValue"
-              >
-              </el-option>
+                v-for="dict in dict.type.FKLXBM"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
             </el-select>
           </template>
         </el-table-column>
@@ -227,7 +228,6 @@
         </el-table-column>
       </el-table>
     </basic-container>
-
     <basic-container class="basic-container-style">
       <label style="left: 0">卖方信息</label>
       <el-table
@@ -237,59 +237,58 @@
         class="basic-container-table"
       >
         <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column label="登记业务证明证书名称" prop="djywzmmcbm"></el-table-column>
-        <el-table-column
-          label="交易业务证明号码"
-          prop="djywzmhm"
-        >
+        <el-table-column label="登记业务证明证书名称" prop="djywzmmcbm">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.DJYWZMMCBM" :value="scope.row.djywzmmcbm"/>
+          </template>
         </el-table-column>
-        <el-table-column
-          label="交易者类别"
-          prop="jyzlbbm"
-        >
+        <el-table-column label="交易业务证明号码" prop="djywzmhm"></el-table-column>
+        <el-table-column label="交易者类别" prop="jyzlbbm">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYZLBBM" :value="scope.row.jyzlbbm"/>
+          </template>
         </el-table-column>
-        <el-table-column
-          label="交易者全称"
-          prop="jyzqc"
-        >
+        <el-table-column label="交易者全称" prop="jyzqc"></el-table-column>
+        <el-table-column label="交易者证件名称" prop="jyzzjmcbm">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYZZJMCBM" :value="scope.row.jyzlbbm"/>
+          </template>
         </el-table-column>
-        <el-table-column
-          label="交易者证件名称"
-          prop="jyzzjmcbm"
-        >
-        </el-table-column>
-        <el-table-column
-          label="交易者证件号码"
-          prop="jyzzjhm"
-        >
-        </el-table-column>
-        <el-table-column
-          label="交易者性质"
-          prop="jyzxzbm"
-        >
+        <el-table-column label="交易者证件号码" prop="jyzzjhm"></el-table-column>
+        <el-table-column label="交易者性质" prop="jyzxzbm">
+          <template scope="scope">
+            <el-select v-model="scope.row.jyzxzbm" size="small">
+              <el-option
+                v-for="dict in dict.type.JYZXZBM"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </template>
         </el-table-column>
         <el-table-column
           label="交易者户籍行政区划"
           prop="jyzhjxzqh"
         >
+          <template scope="scope">
+            <el-input size="small" v-model="scope.row.jyzhjxzqh" placeholder="户籍行政区划"
+            ></el-input>
+          </template>
         </el-table-column>
         <el-table-column
           label="共有方式"
           prop="gyfsbm"
         >
           <template scope="scope">
-            <el-select v-model="scope.row.gyfsbm" size="small" placeholder="请选择">
+            <el-select v-model="scope.row.gyfsbm" size="small">
               <el-option
-                v-for="item in gyfsbmOptions"
-                :key="item.dictKey"
-                :label="item.dictValue"
-                :value="item.dictValue"
-              >
-              </el-option>
+                v-for="dict in dict.type.GYFSBM"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
             </el-select>
-            <!--            <select th:with="type=${@dict.getType('funding_type')}" >-->
-            <!--              <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictLabel}"></option>-->
-            <!--            </select>-->
           </template>
         </el-table-column>
         <el-table-column
@@ -304,6 +303,10 @@
           label="交易者户籍"
           prop="jyzhj"
         >
+          <template scope="scope">
+            <el-input size="small" v-model="scope.row.jyzhj" placeholder="交易者户籍"
+            ></el-input>
+          </template>
         </el-table-column>
       </el-table>
     </basic-container>
@@ -315,66 +318,61 @@
         :data="this.accept[0].buyerList"
         class="basic-container-table"
       >
-        <el-table-column
-          label="序号"
-          type="index"
-        >
+        <el-table-column label="序号" type="index"></el-table-column>
+        <el-table-column label="交易业务证明证书名称" prop="jyywzmmcbm">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYYWZMMCBM" :value="scope.row.jyywzmmcbm"/>
+          </template>
         </el-table-column>
-        <el-table-column
-          label="交易业务证明证书名称"
-          prop="jyywzmmcbm"
-        >
+        <el-table-column label="交易业务证明号码" prop="jyywzmhm"></el-table-column>
+        <el-table-column label="交易者类别" prop="jyzlbbm">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYZLBBM" :value="scope.row.jyzlbbm"/>
+          </template>
         </el-table-column>
-        <el-table-column
-          label="交易业务证明号码"
-          prop="jyywzmhm"
-        >
+        <el-table-column label="交易者全称" prop="jyzqc"></el-table-column>
+        <el-table-column label="交易者证件名称" prop="jyzzjmcbm">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.JYZZJMCBM" :value="scope.row.jyzlbbm"/>
+          </template>
         </el-table-column>
-        <el-table-column
-          label="交易者类别"
-          prop="jyzlbbm"
-        >
-        </el-table-column>
-        <el-table-column
-          label="交易者全称"
-          prop="jyzqc"
-        >
-        </el-table-column>
-        <el-table-column
-          label="交易者证件名称"
-          prop="jyzzjmcbm"
-        >
-        </el-table-column>
-        <el-table-column
-          label="交易者证件号码"
-          prop="jyzzjhm"
-        >
-        </el-table-column>
-        <el-table-column
-          label="交易者性质"
-          prop="jyzxzbm"
-        >
+        <el-table-column label="交易者证件号码" prop="jyzzjhm"></el-table-column>
+        <el-table-column label="交易者性质" prop="jyzxzbm">
+          <template scope="scope">
+            <el-select v-model="scope.row.jyzxzbm" size="small">
+              <el-option
+                v-for="dict in dict.type.JYZXZBM"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </template>
         </el-table-column>
         <el-table-column
           label="交易者户籍行政区划"
           prop="jyzhjxzqh"
         >
+          <template scope="scope">
+            <el-input size="small" v-model="scope.row.jyzhjxzqh" placeholder="户籍行政区划"
+            ></el-input>
+          </template>
         </el-table-column>
         <el-table-column
           label="共有方式"
           prop="gyfsbm"
         >
           <template scope="scope">
-            <el-select v-model="scope.row.gyfsbm" size="small" placeholder="请选择">
+            <el-select v-model="scope.row.gyfsbm" size="small">
               <el-option
-                v-for="item in gyfsbmOptions"
-                :key="item.dictKey"
-                :label="item.dictValue"
-                :value="item.dictValue"
-              >
-              </el-option>
+                v-for="dict in dict.type.GYFSBM"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
             </el-select>
           </template>
+
         </el-table-column>
         <el-table-column
           label="所占份额"
@@ -388,38 +386,48 @@
           label="交易者户籍"
           prop="jyzhj"
         >
+          <template scope="scope">
+            <el-input size="small" v-model="scope.row.jyzhj" placeholder="交易者户籍"
+            ></el-input>
+          </template>
         </el-table-column>
       </el-table>
     </basic-container>
-    <basic-container v-if="false">
-      <el-form>
-        <el-form-item>
-          <el-select v-model="this.accept.dkfsbm">
-            <el-option
-              v-for="dict in dict.dkfsbm"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-    </basic-container>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+
+    </el-dialog>
+    <el-dialog title="图片选择" :visible.sync="imgShow">
+      <el-table
+        :data="this.imgList"
+        border
+        highlight-current-row
+      >
+        <el-table-column type="selection" width="55" align="center"/>
+        <el-table-column label="图片" prop="wjnr">
+          <template scope="scope">
+            {{ scope.row.fjdz }}
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button @click="selectImg">确定</el-button>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import basicContainer from '@/views/components/basic-container/main'
-import { listAccept } from '../../../api/netsign/accept'
+import { listAccept, updateAccept, selectImgShow } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
 
 export default {
+  dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM'],
   name: 'AcceptDetails',
   components: {
     basicContainer
   },
   data() {
     return {
+      open: false,
       // 关闭弹窗
       isOpen: false,
       // 查询参数
@@ -432,9 +440,26 @@ export default {
         status: null
       },
       accept: {},
-      dict: {
-        dkfsbm: []
-      }
+      data: [],
+      // 图片列表显示
+      imgShow: false,
+      imgList: []
+
+    }
+  },
+  computed: {
+    //因为数据用到了dataform中的数据，所以写在了computed中
+    tableData() {
+      return [
+        { annotation: '业务编号', data: this.data.ywbh, annotation1: '上件业务编号', data2: this.data.sjywbh },
+        { annotation: '区县', data: this.data.qx, annotation1: '名义层', data2: this.data.myc },
+        { annotation: '行政区划代码', data: this.data.xzqhdm, annotation1: '房号', data2: this.data.fh },
+        { annotation: '房屋坐落', data: this.data.fwzl, annotation1: '户型居室', data2: this.data.hxjsbm },
+        { annotation: '户型结构', data: this.data.hxjgbm, annotation1: '建筑面积', data2: this.data.jzmj },
+        { annotation: '套内建筑面积', data: this.data.tnjzmj, annotation1: '公摊建筑面积', data2: this.data.gtjzmj },
+        { annotation: '建筑结构', data: this.data.jzjgbm, annotation1: '房屋用途', data2: this.data.fwytbm },
+        { annotation: '房屋性质', data: this.data.fwxzbm, annotation1: '房屋类型', data2: this.data.fwlxbm }
+      ]
     }
   },
   created() {
@@ -449,19 +474,20 @@ export default {
         this.accept = response.rows
         this.total = response.total
         this.loading = false
+        this.data = this.accept[0]
       })
     },
     // 查字典
     selectDict() {
       getDicts('DKFSBM').then(response => {
         this.dict.dkfsbm = response.data
-        console.log(this.dict.dkfsbm)
       })
     },
     // 字典翻译
     dkfsbmFormat(row, column) {
       return this.selectDictLabel(this.dict.dkfsbm, row.dkfsbm)
     },
+
     back() {
       if (!this.state) {
         this.$confirm('文件还未保存,是否退出?', '提示', {
@@ -483,6 +509,44 @@ export default {
       } else {
         this.$emit('childFn', this.isOpen)
       }
+    },
+    // 和并列
+    objectSpanMethod({ rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex % 12 === 0) {
+          return {
+            rowspan: 12,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      updateAccept(row).then(response => {
+        this.$modal.msgSuccess('修改成功')
+        this.getList()
+      })
+    },
+    sub() {
+      console.log(this.dict)
+      console.log(this.accept[0])
+      console.log(this.data)
+      console.log(this.imgList)
+    },
+    selectImgShow() {
+      selectImgShow(this.accept[0].bdcxxId).then(response => {
+        this.imgList = response.data
+        this.imgShow = true
+      })
+    },
+    selectImg() {
+      this.imgShow = false
     }
   }
 }
