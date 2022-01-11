@@ -7,7 +7,7 @@
     >选择图片
     </el-button>
     <el-button
-      @click="handleUpdate(this.accept)" style="margin-left: 53%;background-color: #ffa94c;color: white;" round
+      @click="handleUpdate()" style="margin-left: 53%;background-color: #ffa94c;color: white;" round
     >保存
     </el-button>
     <el-button @click="back" style="background-color: #ffa94c;color: white;" round
@@ -527,11 +527,11 @@ export default {
         }
       }
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      updateAccept(row).then(response => {
-        this.$modal.msgSuccess('修改成功')
-        this.getList()
+    /** 保存按钮操作 */
+    handleUpdate() {
+      updateAccept(this.accept[0]).then(response => {
+        // this.$modal.msgSuccess('修改成功')
+        // this.getList()
       })
     },
     sub() {
