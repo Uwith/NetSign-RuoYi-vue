@@ -59,3 +59,14 @@ export function passAudit(bdcxxId) {
     method: 'get'
   })
 }
+// 撤销审核
+export function rowUndo(recordid,bdcxxId) {
+  return request({
+    url: '/netsign/accept/rowUndo/',
+    method: 'post',
+    params: {
+      recordid,
+      bdcxxId
+    }
+  })
+}

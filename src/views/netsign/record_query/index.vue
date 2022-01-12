@@ -25,20 +25,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['netsign:djyw:add']"
-        >批量提交审核
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+
 
     <el-table v-loading="loading" :data="acceptList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
@@ -64,7 +51,6 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-
             @click="details(scope.row)"
           >详情
           </el-button>
@@ -73,7 +59,7 @@
             type="text"
             icon="el-icon-delete"
             @click="rowUndo(scope.row)"
-            v-if="scope.row.ywzt===3"
+            v-if="scope.row.basicWqba.bastatus===3"
             v-hasPermi="['netsign:djyw:remove']"
           >申请撤销
           </el-button>
@@ -82,7 +68,7 @@
             type="text"
             icon="el-icon-delete"
             @click="rowUndo(scope.row)"
-            v-if="scope.row.ywzt===5"
+            v-if="scope.row.basicWqba.bastatus===5"
             v-hasPermi="['netsign:djyw:remove']"
           >重新申请
           </el-button>
@@ -91,7 +77,7 @@
             type="text"
             icon="el-icon-delete"
             @click="rowUndoNum(scope.row)"
-            v-if="scope.row.ywzt===6"
+            v-if="scope.row.basicWqba.bastatus===6"
             v-hasPermi="['netsign:djyw:remove']"
           >撤销编号
           </el-button>
@@ -127,6 +113,7 @@
 <script>
 import { listAccept } from '@/api/netsign/accept'
 import recordDetails from '@/views/netsign/record_query/details'
+import { passAudit, rowUndo } from '../../../api/netsign/accept'
 
 export default {
   name: 'Accept',
@@ -219,7 +206,6 @@ export default {
       }).catch(() => {
       })
     },
-
     /** 打开详情页面 */
     details(row) {
       sessionStorage.setItem('ywbh', row.ywbh)
@@ -229,7 +215,17 @@ export default {
     closeDetails(isOpen) {
       this.innerVisible = isOpen
       this.getList()
-    }
+    },
+    // 撤销
+    rowUndo(row) {
+      this.$modal.confirm('是否确认撤销审核').then(function() {
+        return rowUndo(row.basicWqba.recordid,row.bdcxxId)
+      }).then(() => {
+        this.getList()
+        this.$modal.msgSuccess('撤销审核成功')
+      }).catch(() => {
+      })
+    },
   }
 }
 </script>
