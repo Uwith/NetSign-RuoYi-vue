@@ -72,16 +72,6 @@
             v-hasPermi="['netsign:djyw:remove']"
           >重新申请
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="rowUndoNum(scope.row)"
-            v-if="scope.row.basicWqba.bastatus===6"
-            v-hasPermi="['netsign:djyw:remove']"
-          >撤销编号
-          </el-button>
-
         </template>
       </el-table-column>
     </el-table>
@@ -149,7 +139,8 @@ export default {
         ywzt: null,
         ywbh: null,
         recordcode:null,
-        status: null
+        status: null,
+        page:3
       },
       // 表单参数
       form: {},

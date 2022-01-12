@@ -23,10 +23,7 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-
     </el-form>
-
-
     <el-table v-loading="loading" :data="acceptList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="备案码" align="center" prop="basicWqba.recordid">
@@ -37,12 +34,11 @@
       <el-table-column label="业务编号" align="center" prop="ywbh"/>
       <el-table-column label="房屋编码" align="center" prop="fwbm"/>
       <el-table-column label="行政区划代码" align="center" prop="xzqhdm"/>
-      <!--      <el-table-column label="区县" align="center" prop="qx"/>-->
       <el-table-column label="房号" align="center" prop="fh"/>
       <el-table-column label="层房序号" align="center" prop="dy"/>
       <el-table-column label="撤销编号" align="center" prop="basicWqba.applyNum">
         <template slot-scope="scope">
-          {{ scope.row.basicWqba.recordid }}
+          {{ scope.row.basicUndo.applynum }}
         </template>
       </el-table-column>
       <el-table-column label="撤销状态" align="center" prop="basicWqba.bastatus">
@@ -52,26 +48,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            v-if="scope.row.ywzt===1"
-            @click="details(scope.row)"
-          >详情
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            v-if="scope.row.ywzt===1"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['netsign:djyw:remove']"
-          >提交审核
-          </el-button>
-          <Span
-            v-if="scope.row.ywzt===0"
-          >推送尚未完结</Span>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="details(scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -139,7 +116,8 @@ export default {
         ywbh: null,
         applynum: null,
         recordcode: null,
-        status: null
+        status: null,
+        page: 4
       },
       // 表单参数
       form: {},
@@ -206,6 +184,11 @@ export default {
     closeDetails(isOpen) {
       this.innerVisible = isOpen
       this.getList()
+    },
+    // 撤销编码
+    rowUndoNum() {
+      // this.$modal.msgSuccess("撤销编号为")
+      console.log(this.acceptList[0].basicWqba.recordcode)
     }
   }
 }

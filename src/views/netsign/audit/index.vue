@@ -97,7 +97,7 @@
 <script>
 import { listAccept } from '@/api/netsign/accept'
 import AuditDetails from '@/views/netsign/audit/details'
-import { passAudit, rejectAudit } from '../../../api/netsign/accept'
+import { DtoList, passAudit, rejectAudit } from '../../../api/netsign/accept'
 
 export default {
   name: 'Accept',
@@ -132,7 +132,8 @@ export default {
         bdcxxId: null,
         ywzt: null,
         ywbh: null,
-        status: null
+        status: null,
+        page:2
       },
       // 表单参数
       form: {},

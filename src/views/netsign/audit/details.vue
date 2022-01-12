@@ -20,16 +20,14 @@
         :cell-style="columnStyle"
         style="width: 77%; margin-top: 20px;left: 10%;"
       >
+        <!-- element ui图片预览 -->
         <el-table-column prop="id" label="ID" width="220px">
-          <template slot-scope="scope">
-            <div id="uploadImg" style="">
-              <div class="bgimg">
-                <span>aaa</span>
-                <!--                <el-image :fit="none" style="height:300px" :src="srcList[0]" @click="show" :error="空"></el-image>-->
-              </div>
+          <div>
+            <img :src="srcList[0]" style="width: 100%; height: 300px" @click="show">
+            <div class="images" v-viewer="{movable: false}" v-show="false">
+              <img v-for="src in srcList" :src="src" :key="src" style="width: 100%; height: 100px">
             </div>
-
-          </template>
+          </div>
         </el-table-column>
         <el-table-column style="width:80px;line-height: 10px " prop="annotation"></el-table-column>
         <el-table-column prop="data"></el-table-column>
@@ -264,14 +262,21 @@
 
 <script>
 import basicContainer from '@/views/components/basic-container/main'
-import { listAccept, passAudit, rejectAudit } from '../../../api/netsign/accept'
+import { listAccept, passAudit, queryImgUrl, rejectAudit } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
+import 'viewerjs/dist/viewer.css'
+import { directive as viewer } from "v-viewer"
 
 export default {
   dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM', 'DKFSBM'],
   name: 'AuditDetails',
   components: {
     basicContainer
+  },
+  directives: {
+    viewer: viewer({
+      debug: true,
+    }),
   },
   data() {
     return {
@@ -291,8 +296,11 @@ export default {
       data: [],
       // 图片列表显示
       imgShow: false,
-      imgList: []
-
+      imgList: [],
+      // 图片预览
+      srcList: [
+        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F3d7692a3d1c87050639bf9cbb55fd7d337068b272405a-UPkg4W_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1636521968&t=a0f7eb1183ccc464c40b35e0e0dcc410'
+      ],
     }
   },
   computed: {
@@ -312,7 +320,6 @@ export default {
   },
   created() {
     this.getList()
-    this.selectDict()
   },
   methods: {
     getList() {
@@ -323,17 +330,10 @@ export default {
         this.total = response.total
         this.loading = false
         this.data = this.accept[0]
-      })
-    },
-    // 查字典
-    selectDict() {
-      getDicts('DKFSBM').then(response => {
-        this.dict.dkfsbm = response.data
-      })
-    },
-    // 字典翻译
-    dkfsbmFormat(row, column) {
-      return this.selectDictLabel(this.dict.dkfsbm, row.dkfsbm)
+        this.queryImgUrl()
+      }).then(
+        this.selectDict()
+      )
     },
     back() {
       this.$message({
@@ -364,9 +364,70 @@ export default {
         this.back()
       })
     },
+    // 通过审核
     passAudit() {
       passAudit(this.accept[0].bdcxxId).then(response => {
         this.$modal.msg(response.msg)
+      })
+    },
+    show() {
+      const viewer = this.$el.querySelector('.images').$viewer
+      viewer.show()
+    },
+    queryImgUrl() {
+      queryImgUrl(this.accept[0].bdcxxId).then(response => {
+        this.srcList = response.data
+      })
+    },
+    // 查字典
+    selectDict() {
+      getDicts('HXJGBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.hxjgbm) {
+            this.data.hxjgbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('HXJSBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.hxjsbm) {
+            this.data.hxjsbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('JZJGBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.jzjgbm) {
+            this.data.jzjgbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('FWYTBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwytbm) {
+            this.data.fwytbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('FWXZBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwxzbm) {
+            this.data.fwytbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('FWLXBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwlxbm) {
+            this.data.fwlxbm = datas[i].dictLabel
+          }
+        }
       })
     }
   }

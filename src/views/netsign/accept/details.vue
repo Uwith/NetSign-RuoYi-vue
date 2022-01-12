@@ -482,7 +482,6 @@ export default {
   },
   created() {
     this.getList()
-    this.selectDict()
   },
   methods: {
     getList() {
@@ -493,17 +492,60 @@ export default {
         this.total = response.total
         this.loading = false
         this.data = this.accept[0]
-      })
+      }).then(
+        this.selectDict()
+      )
     },
     // 查字典
     selectDict() {
-      getDicts('DKFSBM').then(response => {
-        this.dict.dkfsbm = response.data
+      getDicts('HXJGBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.hxjgbm) {
+            this.data.hxjgbm = datas[i].dictLabel
+          }
+        }
       })
-    },
-    // 字典翻译
-    dkfsbmFormat(row, column) {
-      return this.selectDictLabel(this.dict.dkfsbm, row.dkfsbm)
+      getDicts('HXJSBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.hxjsbm) {
+            this.data.hxjsbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('JZJGBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.jzjgbm) {
+            this.data.jzjgbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('FWYTBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwytbm) {
+            this.data.fwytbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('FWXZBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwxzbm) {
+            this.data.fwytbm = datas[i].dictLabel
+          }
+        }
+      })
+      getDicts('FWLXBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwlxbm) {
+            this.data.fwlxbm = datas[i].dictLabel
+          }
+        }
+      })
     },
 
     back() {

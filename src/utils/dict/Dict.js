@@ -53,6 +53,7 @@ export default class Dict {
     }
     return loadDict(this, dictMeta)
   }
+
 }
 
 /**

@@ -9,6 +9,15 @@ export function listAccept(query) {
   })
 }
 
+// 查询登记业务列表
+export function DtoList(query) {
+  return request({
+    url: '/netsign/accept/DtoList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 修改不动产信息
 export function updateAccept(data) {
   return request({
@@ -28,9 +37,9 @@ export function selectImgShow(data) {
 }
 
 // 选择图片
-export function selectImg(data,bdcxxId) {
+export function selectImg(data, bdcxxId) {
   return request({
-    url: '/netsign/accept/selectImg/'+bdcxxId,
+    url: '/netsign/accept/selectImg/' + bdcxxId,
     method: 'post',
     data: data
   })
@@ -39,7 +48,7 @@ export function selectImg(data,bdcxxId) {
 // 提交审核
 export function submitAudit(bdcxxId) {
   return request({
-    url: '/netsign/accept/submit/'+ bdcxxId,
+    url: '/netsign/accept/submit/' + bdcxxId,
     method: 'get'
   })
 }
@@ -47,7 +56,7 @@ export function submitAudit(bdcxxId) {
 // 驳回审核
 export function rejectAudit(bdcxxId) {
   return request({
-    url: '/netsign/accept/reject/'+ bdcxxId,
+    url: '/netsign/accept/reject/' + bdcxxId,
     method: 'get'
   })
 }
@@ -55,12 +64,13 @@ export function rejectAudit(bdcxxId) {
 // 通过审核
 export function passAudit(bdcxxId) {
   return request({
-    url: '/netsign/accept/passAudit/'+ bdcxxId,
+    url: '/netsign/accept/passAudit/' + bdcxxId,
     method: 'get'
   })
 }
+
 // 撤销审核
-export function rowUndo(recordid,bdcxxId) {
+export function rowUndo(recordid, bdcxxId) {
   return request({
     url: '/netsign/accept/rowUndo/',
     method: 'post',
@@ -68,5 +78,14 @@ export function rowUndo(recordid,bdcxxId) {
       recordid,
       bdcxxId
     }
+  })
+}
+
+// 查询被选择图片url
+export function queryImgUrl(query) {
+  return request({
+    url: '/netsign/accept/queryImgUrl',
+    method: 'post',
+    data: query
   })
 }
