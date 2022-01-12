@@ -1,9 +1,6 @@
 <template>
   <div class="details">
-    <el-button @click="sub" style="margin-left: 12%;background-color: #ffa94c;color: white;" round
-    >打印
-    </el-button>
-    <el-button @click="selectImgShow()" style="background-color: #ffa94c;color: white;" round
+    <el-button @click="selectImgShow()" style="margin-left: 13%;background-color: #ffa94c;color: white;" round
     >选择图片
     </el-button>
     <el-button
@@ -24,17 +21,17 @@
         :cell-style="columnStyle"
         style="width: 77%; margin-top: 20px;left: 10%;"
       >
-        <el-table-column prop="id" label="ID" width="220px">
-          <template slot-scope="scope">
-            <div id="uploadImg" style="">
-              <div class="bgimg">
-                <span>aaa</span>
-                <!--                <el-image :fit="none" style="height:300px" :src="srcList[0]" @click="show" :error="空"></el-image>-->
-              </div>
-            </div>
+        <!--        <el-table-column prop="id" label="ID" width="220px">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <div id="uploadImg" style="">-->
+        <!--              <div class="bgimg">-->
+        <!--                <span>aaa</span>-->
+        <!--                &lt;!&ndash;                <el-image :fit="none" style="height:300px" :src="srcList[0]" @click="show" :error="空"></el-image>&ndash;&gt;-->
+        <!--              </div>-->
+        <!--            </div>-->
 
-          </template>
-        </el-table-column>
+        <!--          </template>-->
+        <!--        </el-table-column>-->
         <el-table-column style="width:80px;line-height: 10px " prop="annotation"></el-table-column>
         <el-table-column prop="data"></el-table-column>
         <el-table-column prop="annotation1"></el-table-column>
@@ -393,24 +390,40 @@
         </el-table-column>
       </el-table>
     </basic-container>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
 
-    </el-dialog>
-    <el-dialog title="图片选择" :visible.sync="imgShow">
+    <!--    </el-dialog>-->
+    <el-dialog title="图片选择" :visible.sync="imgShow" :modal="false">
       <el-table
         :data="this.imgList"
         border
         highlight-current-row
         @selection-change="handleSelectionChange"
+        :cell-style="{padding:'2px 0',hight:'150px'}"
       >
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="图片" prop="wjnr">
+        <el-table-column label="文件id" width="70" prop="wjId">
           <template scope="scope">
-            {{ scope.row.fjdz }}
+            {{ scope.row.wjId }}
+          </template>
+        </el-table-column>
+        <el-table-column label="图片" prop="wjnr">
+          <template slot-scope="scope">
+            <img :src="scope.row.fjdz" alt="" style="max-height: 150px"/>
+            <!-- {{ scope.row.fjdz }} -->
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="55" prop="status">
+          <template slot-scope="scope">
+            {{ scope.row.status }}
           </template>
         </el-table-column>
       </el-table>
-      <el-button @click="selectImg">确定</el-button>
+      <el-button @click="selectImg"
+                 plain
+                 :disabled="multiple"
+      >确定
+      </el-button>
     </el-dialog>
   </div>
 </template>
@@ -419,6 +432,7 @@
 import basicContainer from '@/views/components/basic-container/main'
 import { listAccept, updateAccept, selectImgShow, selectImg } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
+import logo from '../../../layout/components/Sidebar/Logo'
 
 export default {
   dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM', 'DKFSBM'],
@@ -431,6 +445,8 @@ export default {
       open: false,
       // 关闭弹窗
       isOpen: false,
+      // 非多个禁用
+      multiple: true,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -513,21 +529,21 @@ export default {
       }
     },
     // 和并列
-    objectSpanMethod({ rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        if (rowIndex % 12 === 0) {
-          return {
-            rowspan: 12,
-            colspan: 1
-          }
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0
-          }
-        }
-      }
-    },
+    // objectSpanMethod({ rowIndex, columnIndex }) {
+    //   if (columnIndex === 0) {
+    //     if (rowIndex % 12 === 0) {
+    //       return {
+    //         rowspan: 12,
+    //         colspan: 1
+    //       }
+    //     } else {
+    //       return {
+    //         rowspan: 0,
+    //         colspan: 0
+    //       }
+    //     }
+    //   }
+    // },
     /** 保存按钮操作 */
     handleUpdate() {
       this.state = true
@@ -535,12 +551,6 @@ export default {
         this.$modal.msgSuccess('修改成功')
         this.getList()
       })
-    },
-    sub() {
-      console.log(this.dict)
-      console.log(this.accept[0])
-      console.log(this.data)
-      console.log(this.imgList)
     },
     selectImgShow() {
       selectImgShow(this.accept[0].bdcxxId).then(response => {
@@ -555,10 +565,13 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    /** 删除按钮操作 */
+    // 选择图片
     selectImg() {
       const wjIds = this.ids
-      selectImg(wjIds)
+      selectImg(wjIds, this.imgList[0].bdcxxId).then(response => {
+        // this.$modal.msgSuccess('修改'+response.+'成功')
+        console.log(response)
+      })
       this.imgShow = false
     }
   }
@@ -566,5 +579,7 @@ export default {
 </script>
 
 <style scoped>
-
+.el-table .cell {
+  line-height: 40px;
+}
 </style>

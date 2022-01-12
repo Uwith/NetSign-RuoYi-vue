@@ -27,10 +27,10 @@ export function selectImgShow(data) {
   })
 }
 
-// 查询登记业务列表
-export function selectImg(data) {
+// 选择图片
+export function selectImg(data,bdcxxId) {
   return request({
-    url: '/netsign/accept/selectImg',
+    url: '/netsign/accept/selectImg/'+bdcxxId,
     method: 'post',
     data: data
   })
