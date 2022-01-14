@@ -330,7 +330,6 @@ export default {
         this.loading = false
         this.data = this.accept[0]
         this.queryImgUrl()
-      }).then(() => {
         this.selectDict()
       })
     },

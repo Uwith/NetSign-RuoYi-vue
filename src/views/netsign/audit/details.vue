@@ -1,9 +1,11 @@
 <template>
   <div class="details">
     <el-button @click="passAudit()" style="margin-left: 12%;background-color: #ffa94c;color: white;" round
+               v-hasPermi="['netsign:audit:pass']"
     >通过审核
     </el-button>
     <el-button @click="reject()" style="background-color: #ffa94c;color: white;" round
+               v-hasPermi="['netsign:audit:reject']"
     >驳回
     </el-button>
     <el-button @click="back()" style="margin-left: 54%;background-color: #ffa94c;color: white;" round
@@ -23,7 +25,8 @@
         <!-- element ui图片预览 -->
         <el-table-column prop="id" label="ID" width="220px">
           <div>
-            <img :src="srcList[0]" style="width: 100%; height: 300px" @click="show">
+            <img :src="srcList[0]" style="width: 100%; height: 300px"  @click="show" >
+            <!--          v-if="imgShow"-->
             <div class="images" v-viewer="{movable: false}" v-show="false">
               <img v-for="src in srcList" :src="src" :key="src" style="width: 100%; height: 100px">
             </div>
@@ -265,7 +268,7 @@ import basicContainer from '@/views/components/basic-container/main'
 import { listAccept, passAudit, queryImgUrl, rejectAudit } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
 import 'viewerjs/dist/viewer.css'
-import { directive as viewer } from "v-viewer"
+import { directive as viewer } from 'v-viewer'
 
 export default {
   dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM', 'DKFSBM'],
@@ -275,8 +278,8 @@ export default {
   },
   directives: {
     viewer: viewer({
-      debug: true,
-    }),
+      debug: true
+    })
   },
   data() {
     return {
@@ -295,12 +298,12 @@ export default {
       accept: {},
       data: [],
       // 图片列表显示
-      imgShow: false,
+      imgShow: true,
       imgList: [],
       // 图片预览
       srcList: [
         'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F3d7692a3d1c87050639bf9cbb55fd7d337068b272405a-UPkg4W_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1636521968&t=a0f7eb1183ccc464c40b35e0e0dcc410'
-      ],
+      ]
     }
   },
   computed: {
@@ -321,6 +324,9 @@ export default {
   created() {
     this.getList()
   },
+  // beforeMount(){
+  //
+  // },
   methods: {
     getList() {
       this.loading = true
@@ -331,9 +337,8 @@ export default {
         this.loading = false
         this.data = this.accept[0]
         this.queryImgUrl()
-      }).then(
         this.selectDict()
-      )
+      })
     },
     back() {
       this.$message({
@@ -376,9 +381,13 @@ export default {
     },
     queryImgUrl() {
       queryImgUrl(this.accept[0].bdcxxId).then(response => {
+        // debugger
+        // console.log(response.data[0])
         this.srcList = response.data
+
       })
     },
+
     // 查字典
     selectDict() {
       getDicts('HXJGBM').then(response => {

@@ -25,8 +25,8 @@
           size="mini"
           :disabled="multiple"
           @click="handleAudit"
+          v-hasPermi="['netsign:accept:submits']"
         >批量提交审核
-          <!--          v-hasPermi="['netsign:djyw:remove']"-->
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -66,7 +66,6 @@
             icon="el-icon-delete"
             v-if="scope.row.ywzt===1"
             @click="handleAudit(scope.row)"
-            v-hasPermi="['netsign:djyw:remove']"
           >提交审核
           </el-button>
           <Span

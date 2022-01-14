@@ -60,7 +60,7 @@
             icon="el-icon-delete"
             @click="rowUndo(scope.row)"
             v-if="scope.row.basicWqba.bastatus===3"
-            v-hasPermi="['netsign:djyw:remove']"
+            v-hasPermi="['netsign:record:undo']"
           >申请撤销
           </el-button>
           <el-button
@@ -69,7 +69,7 @@
             icon="el-icon-delete"
             @click="rowUndo(scope.row)"
             v-if="scope.row.basicWqba.bastatus===5"
-            v-hasPermi="['netsign:djyw:remove']"
+            v-hasPermi="['netsign:record:undo']"
           >重新申请
           </el-button>
         </template>

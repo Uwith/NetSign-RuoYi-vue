@@ -1,10 +1,12 @@
 <template>
   <div class="details">
     <el-button @click="selectImgShow()" style="margin-left: 13%;background-color: #ffa94c;color: white;" round
+               v-hasPermi="['netsign:accept:selectImg']"
     >选择图片
     </el-button>
     <el-button
       @click="handleUpdate()" style="margin-left: 53%;background-color: #ffa94c;color: white;" round
+      v-hasPermi="['netsign:accept:edit']"
     >保存
     </el-button>
     <el-button @click="back" style="background-color: #ffa94c;color: white;" round
@@ -433,6 +435,7 @@ import basicContainer from '@/views/components/basic-container/main'
 import { listAccept, updateAccept, selectImgShow, selectImg } from '../../../api/netsign/accept'
 import { getDicts } from '../../../api/system/dict/data'
 import logo from '../../../layout/components/Sidebar/Logo'
+import { deepClone } from '../../../utils'
 
 export default {
   dicts: ['DJYWZMMCBM', 'JYYWZMMCBM', 'JYZLBBM', 'GYFSBM', 'JYZXZBM', 'JYZZJMCBM', 'FKLXBM', 'DKFSBM'],
@@ -462,7 +465,6 @@ export default {
       imgShow: false,
       imgList: [],
       state: false
-
     }
   },
   computed: {
@@ -488,14 +490,18 @@ export default {
       this.loading = true
       this.queryParams.ywbh = sessionStorage.getItem('ywbh')
       listAccept(this.queryParams).then(response => {
-        this.accept = response.rows
+        let source
+        source = response.rows
         this.total = response.total
         this.loading = false
-        this.data = this.accept[0]
-      }).then(
+        this.accept = source
+        let objDeepCopy
+        objDeepCopy = this.deepClone(source[0])
+        this.data = objDeepCopy
         this.selectDict()
-      )
+      })
     },
+
     // 查字典
     selectDict() {
       getDicts('HXJGBM').then(response => {
@@ -547,7 +553,21 @@ export default {
         }
       })
     },
-
+    // 深复制
+    deepClone(obj) {
+      if (!this.isObject(obj)) {
+        throw new Error('obj 不是一个对象！')
+      }
+      let isArray = Array.isArray(obj)
+      let cloneObj = isArray ? [] : {}
+      for (let key in obj) {
+        cloneObj[key] = this.isObject(obj[key]) ? this.deepClone(obj[key]) : obj[key]
+      }
+      return cloneObj
+    },
+    isObject(o) {
+      return (typeof o === 'object' || typeof o === 'function') && o !== null
+    },
     back() {
       if (!this.state) {
         this.$confirm('文件还未保存,是否退出?', '提示', {
@@ -589,6 +609,8 @@ export default {
     /** 保存按钮操作 */
     handleUpdate() {
       this.state = true
+      debugger
+      console.log(this.accept[0])
       updateAccept(this.accept[0]).then(response => {
         this.$modal.msgSuccess('修改成功')
         this.getList()

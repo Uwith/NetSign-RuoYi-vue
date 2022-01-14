@@ -25,7 +25,7 @@
           size="mini"
           :disabled="multiple"
           @click="passAudit"
-          v-hasPermi="['netsign:djyw:add']"
+          v-hasPermi="['netsign:audit:pass']"
         >批量通过审核
         </el-button>
       </el-col>
@@ -37,7 +37,7 @@
           size="mini"
           :disabled="multiple"
           @click="rejectAudit"
-          v-hasPermi="['netsign:djyw:add']"
+          v-hasPermi="['netsign:audit:reject']"
         >批量驳回审核
         </el-button>
       </el-col>
