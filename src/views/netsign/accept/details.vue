@@ -90,15 +90,15 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column
-          label="层房序号"
-          prop="dy"
-        >
-          <template scope="scope">
-            <el-input size="small" v-model="scope.row.dy" placeholder="单元"
-            ></el-input>
-          </template>
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          label="层房序号"-->
+<!--          prop="dy"-->
+<!--        >-->
+<!--          <template scope="scope">-->
+<!--            <el-input size="small" v-model="scope.row.dy" placeholder="单元"-->
+<!--            ></el-input>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
 
       </el-table>
     </basic-container>
@@ -474,11 +474,12 @@ export default {
         { annotation: '业务编号', data: this.data.ywbh, annotation1: '上件业务编号', data2: this.data.sjywbh },
         { annotation: '区县', data: this.data.qx, annotation1: '名义层', data2: this.data.myc },
         { annotation: '行政区划代码', data: this.data.xzqhdm, annotation1: '房号', data2: this.data.fh },
-        { annotation: '房屋坐落', data: this.data.fwzl, annotation1: '户型居室', data2: this.data.hxjsbm },
-        { annotation: '户型结构', data: this.data.hxjgbm, annotation1: '建筑面积', data2: this.data.jzmj },
+        { annotation: '房屋坐落', data: this.data.fwzl, annotation1: '建筑面积', data2: this.data.jzmj },
         { annotation: '套内建筑面积', data: this.data.tnjzmj, annotation1: '公摊建筑面积', data2: this.data.gtjzmj },
-        { annotation: '建筑结构', data: this.data.jzjgbm, annotation1: '房屋用途', data2: this.data.fwytbm },
-        { annotation: '房屋性质', data: this.data.fwxzbm, annotation1: '房屋类型', data2: this.data.fwlxbm }
+        { annotation: '层房序号', data: this.data.dy, annotation1: '户型居室', data2: this.data.hxjsbm},
+        { annotation: '户型结构', data: this.data.hxjgbm, annotation1: '房屋用途', data2: this.data.fwytbm },
+        { annotation: '房屋性质', data: this.data.fwxzbm, annotation1: '房屋类型', data2: this.data.fwlxbm },
+        { annotation: '建筑结构', data: this.data.jzjgbm, annotation1: '房屋朝向', data2: this.data.fwcxbm }
       ]
     }
   },
@@ -528,6 +529,14 @@ export default {
           }
         }
       })
+      getDicts('FWXZBM').then(response => {
+        let datas = response.data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].dictValue === this.data.fwxzbm) {
+            this.data.fwxzbm = datas[i].dictLabel
+          }
+        }
+      })
       getDicts('FWYTBM').then(response => {
         let datas = response.data
         for (let i = 0; i < datas.length; i++) {
@@ -536,11 +545,11 @@ export default {
           }
         }
       })
-      getDicts('FWXZBM').then(response => {
+      getDicts('FWCXBM').then(response => {
         let datas = response.data
         for (let i = 0; i < datas.length; i++) {
-          if (datas[i].dictValue === this.data.fwxzbm) {
-            this.data.fwytbm = datas[i].dictLabel
+          if (datas[i].dictValue === this.data.fwcxbm) {
+            this.data.fwcxbm = datas[i].dictLabel
           }
         }
       })
